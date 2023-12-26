@@ -12,7 +12,7 @@ server.use(cors());
 server.use(cookieParser());
 
 server.get("/api", (req, res) => {
-  res.json("Welcome to Airbnb Clone APIs made by Shirso Bhattacharyya.");
+  res.json("Welcome to OYO Clone APIs made by Shirso Bhattacharyya.");
 });
 
 server.use("/api", routes);

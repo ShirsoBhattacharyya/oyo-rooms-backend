@@ -1,7 +1,6 @@
 const hotelService = require("../services/hotel.service");
 
 const getHotelsByFilter = async (req, res) => {
-  console.log(req.body);
   try {
     let { message, data } = await hotelService.getHotelsByFilter(req.body);
     res.json({ message, data });

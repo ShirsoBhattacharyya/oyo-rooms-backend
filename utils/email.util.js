@@ -57,18 +57,21 @@ const sendVerificationEmail = async (user, res) => {
     });
 
     if (newVerifiedEmail) {
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("error:", error);
-          res.status(500).json({ message: "Something went wrong" });
-        } else {
-          console.log("Email sent:", info.response);
-          res.json({
-            success: "PENDING",
-            message:
-              "Verification email has been sent to your account. Check your email for further instructions.",
-          });
-        }
+      await new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            console.log("error:", error);
+            reject(error);
+          } else {
+            console.log("Email sent:", info.response);
+            resolve(info?.response);
+          }
+        });
+      });
+      res.json({
+        success: "PENDING",
+        message:
+          "Verification email has been sent to your account. Check your email for further instructions.",
       });
     }
   } catch (error) {
@@ -127,7 +130,7 @@ const resetPasswordLink = async (user, res) => {
   }
 };
 
-const confirmationEmail = async (booking, res) => {
+const confirmationEmail = async (booking) => {
   const mailOptions = {
     from: process.env.AUTH_EMAIL,
     to: booking?.userDetails?.email,
@@ -162,22 +165,20 @@ const confirmationEmail = async (booking, res) => {
 </div>`,
   };
   try {
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log("error:", error);
-        res.status(500).json({ message: "Something went wrong" });
-      } else {
-        console.log("Email sent:", info.response);
-        res.json({
-          success: "PENDING",
-          message:
-            "Booking Confirmation Email has been sent to your account. Check your email for all the booking details.",
-        });
-      }
+    await new Promise((resolve, reject) => {
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("error:", error);
+          reject(error);
+        } else {
+          console.log("Email sent:", info?.response);
+          resolve(info?.response);
+        }
+      });
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Something went wrong" });
+    throw error;
   }
 };
 

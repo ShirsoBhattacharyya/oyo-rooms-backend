@@ -10,6 +10,20 @@ const getBookingById = async (id) => {
   }
 };
 
+const getBookingByFilter = async (filterObject) => {
+  try {
+    console.log({ filterObject });
+    const response = await Booking.find({
+      "userDetails.email": filterObject?.email,
+    });
+    console.log({ response });
+    return { message: "Success", data: response };
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+};
+
 const createBooking = async (bookingObject) => {
   try {
     let newBooking = await Booking.create(bookingObject);
@@ -20,4 +34,4 @@ const createBooking = async (bookingObject) => {
   }
 };
 
-module.exports = { getBookingById, createBooking };
+module.exports = { getBookingById, getBookingByFilter, createBooking };

@@ -10,12 +10,21 @@ const getBookingById = async (req, res) => {
   }
 };
 
+const getBookingByFilter = async (req, res) => {
+  try {
+    let { message, data } = await bookingService.getBookingByFilter(req.body);
+    res.json({ message, data });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const createBooking = async (req, res) => {
   try {
     let { message, data } = await bookingService.createBooking(req.body);
     if (data) {
       console.log(data);
-      await confirmationEmail(data, res);
+      await confirmationEmail(data);
     }
     res.json({ message, data });
   } catch (error) {
@@ -23,4 +32,4 @@ const createBooking = async (req, res) => {
   }
 };
 
-module.exports = { getBookingById, createBooking };
+module.exports = { getBookingById, getBookingByFilter, createBooking };

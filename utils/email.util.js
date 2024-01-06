@@ -15,7 +15,7 @@ let transporter = nodemailer.createTransport({
   },
 });
 
-const sendVerificationEmail = async (user, res) => {
+const sendVerificationEmail = async (user) => {
   const { _id, email, name } = user;
   const token = _id + v4();
   const link = process.env.APP_URL + "auth/" + _id + "/verify/" + token;
@@ -67,11 +67,6 @@ const sendVerificationEmail = async (user, res) => {
             resolve(info?.response);
           }
         });
-      });
-      res.json({
-        success: "PENDING",
-        message:
-          "Verification email has been sent to your account. Check your email for further instructions.",
       });
     }
   } catch (error) {

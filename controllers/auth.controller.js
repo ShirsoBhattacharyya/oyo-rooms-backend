@@ -10,9 +10,12 @@ const registerUser = async (req, res) => {
       password
     );
     if (newUser) {
-      await sendVerificationEmail(newUser, res);
+      await sendVerificationEmail(newUser);
     }
-    res.json({ message, data: newUser });
+    res.json({
+      message,
+      data: newUser,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

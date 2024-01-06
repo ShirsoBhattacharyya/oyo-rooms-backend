@@ -11,7 +11,7 @@ const validatePassword = (password) => {
     regexLowerCase.test(password) &&
     regexDigit.test(password) &&
     regexSpecialChar.test(password) &&
-    password.length >= 12
+    password.length >= 7
   );
 };
 

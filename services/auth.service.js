@@ -19,7 +19,7 @@ const registerUser = async (name, email, password) => {
     if (!validatePassword(password)) {
       return {
         message:
-          "Password must contain capital letters, special characters, small letters, and numbers, and should be at least 12 characters long.",
+          "Password must contain capital letters, special characters, small letters, and numbers, and should be at least seven characters long.",
       };
     }
     const bcryptSalt = bcrypt.genSaltSync(10);
@@ -30,7 +30,7 @@ const registerUser = async (name, email, password) => {
     });
     return {
       message:
-        "Account created successfully. Please verify your email address to log in your account.",
+        "Account created successfully. Verification email has been sent to your account. Check your email for further instructions.",
       newUser,
     };
   } catch (error) {

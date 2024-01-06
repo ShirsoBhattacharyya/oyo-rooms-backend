@@ -8,13 +8,7 @@ const server = express();
 const PORT = process.env.PORT || 8080;
 
 server.use(express.json());
-server.use(
-  cors({
-    origin: ["https://oyo-clone-shirso.netlify.app", "http://127.0.0.1:3000"],
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    credentials: true,
-  })
-);
+server.use(cors());
 server.use(cookieParser());
 
 server.get("/api", (req, res) => {

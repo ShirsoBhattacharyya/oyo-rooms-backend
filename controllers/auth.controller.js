@@ -11,13 +11,16 @@ const registerUser = async (req, res) => {
     );
     if (newUser) {
       await sendVerificationEmail(newUser);
+      res.json({
+        status: 200,
+        message: message,
+        data: newUser,
+      });
+    } else {
+      res.json({ status: 400, message: message });
     }
-    res.json({
-      message,
-      data: newUser,
-    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json({ status: 500, message: error.message });
   }
 };
 
@@ -29,12 +32,16 @@ const loginUser = async (req, res) => {
       password
     );
     if (token && existingUser) {
-      res.json({ message, data: { existingUser, token } });
+      res.json({
+        status: 200,
+        message: message,
+        data: { existingUser, token },
+      });
     } else {
-      res.status(400).json({ message });
+      res.json({ status: 400, message: message });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json({ status: 500, message: error.message });
   }
 };
 
@@ -53,23 +60,23 @@ const verifyEmail = async (req, res) => {
 
 const getUserDetails = async (req, res) => {
   try {
-    const { message, data } = await authService.getUserDetails(req.body.id);
-    res.json({ message, data });
+    const { status, message, data } = await authService.getUserDetails(req.body.id);
+    res.json({ status, message, data });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json({ status: 500, message: error.message });
   }
 };
 
 const updateUserDetails = async (req, res) => {
   try {
-    const { message } = await authService.updateUserDetails(
+    const { status, message, data } = await authService.updateUserDetails(
       req.params.id,
       req.body,
-      (req.query.filterType = "")
+      req.query.filterType
     );
-    res.json({ message });
+    res.json({ status, message, data });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.json({ status: 500, message: error.message });
   }
 };
 

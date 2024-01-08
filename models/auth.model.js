@@ -13,7 +13,6 @@ const AuthSchema = new Schema(
     },
     phone: {
       type: Number,
-      unique: true
     },
     password: { type: String, required: [true, "Password is required."] },
     verified: { type: Boolean, default: false },

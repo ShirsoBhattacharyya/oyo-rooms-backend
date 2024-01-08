@@ -105,8 +105,8 @@ const verifyEmail = async (userId, token) => {
 
 const getUserDetails = async (id) => {
   try {
-    const response = await User.findById(id);
-    return { message: "Success", data: response };
+    const response = await User.findOne({ _id: id });
+    return { status: 200, message: "Success", data: response };
   } catch (error) {
     console.error(error.message);
     throw error;
@@ -117,7 +117,7 @@ const updateUserDetails = async (id, updatedUser, filterType) => {
   try {
     let response;
     if (filterType === "UPDATE_PASSWORD") {
-      const userDetails = await User.findById(id);
+      const userDetails = await User.findOne({ _id: id });
       const passwordCheck = bcrypt.compareSync(
         updatedUser?.oldPassword,
         userDetails?.password
@@ -125,15 +125,31 @@ const updateUserDetails = async (id, updatedUser, filterType) => {
       if (passwordCheck) {
         const newPassword = updatedUser?.newPassword;
         const bcryptSalt = bcrypt.genSaltSync(10);
-        response = await User.findOneAndUpdate(
+        await User.findOneAndUpdate(
           { _id: id },
           { password: bcrypt.hashSync(newPassword, bcryptSalt) }
         );
+        response = await User.findOne({ _id: id });
+        return {
+          status: 200,
+          message: "Password updated successfully.",
+          data: response,
+        };
+      } else {
+        return {
+          status: 400,
+          message: "Incorrect Password. Please try again.",
+        };
       }
     } else {
-      response = await User.findOneAndUpdate({ _id: id }, updatedUser);
+      await User.findOneAndUpdate({ _id: id }, updatedUser);
+      response = await User.findById(id);
+      return {
+        status: 200,
+        message: "User updated successfully.",
+        data: response,
+      };
     }
-    return { message: "Success", data: response };
   } catch (error) {
     console.error(error.message);
     throw error;
